@@ -26,6 +26,8 @@ part 'widgets/overlay_builder.dart';
 
 enum _DropdownType { singleSelect, multipleSelect }
 
+enum DropdownPlacement { top, bottom, auto }
+
 enum _SearchType { onListData, onRequestData }
 
 const _defaultErrorColor = Colors.red;
@@ -152,6 +154,8 @@ class CustomDropdown<T> extends StatefulWidget {
   /// If disabled, you can not open the dropdown.
   final bool enabled;
 
+  final DropdownPlacement dropdownPlacement;
+
   /// [CustomDropdown] disabled decoration.
   ///
   /// Note: Only applicable if dropdown is disabled.
@@ -192,6 +196,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.validator,
     this.validateOnChange = true,
     this.visibility,
+    this.dropdownPlacement = DropdownPlacement.auto,
     this.overlayController,
     this.listItemBuilder,
     this.headerBuilder,
@@ -252,6 +257,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.listItemBuilder,
     this.headerBuilder,
     this.hintBuilder,
+    this.dropdownPlacement = DropdownPlacement.auto,
     this.noResultFoundBuilder,
     this.validator,
     this.validateOnChange = true,
@@ -304,6 +310,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.hintText,
     this.decoration,
     this.visibility,
+    this.dropdownPlacement = DropdownPlacement.auto,
     this.overlayController,
     this.searchHintText,
     this.noResultFoundText,
@@ -349,6 +356,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.itemsScrollController,
     this.listValidator,
     this.visibility,
+    this.dropdownPlacement = DropdownPlacement.auto,
     this.headerListBuilder,
     this.hintText,
     this.decoration,
@@ -404,6 +412,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.initialItems,
     this.controller,
     this.visibility,
+    this.dropdownPlacement = DropdownPlacement.auto,
     this.itemsScrollController,
     this.overlayController,
     this.listValidator,
@@ -466,6 +475,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.itemsScrollController,
     this.overlayController,
     this.visibility,
+    this.dropdownPlacement = DropdownPlacement.auto,
     this.hintText,
     this.decoration,
     this.searchHintText,
@@ -673,6 +683,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
                   searchRequestLoadingIndicator:
                       widget.searchRequestLoadingIndicator,
                   dropdownType: widget._dropdownType,
+                  dropdownPlacement: widget.dropdownPlacement,
                 );
               },
               child: (showCallback) {
