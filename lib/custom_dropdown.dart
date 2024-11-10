@@ -1,6 +1,7 @@
 library animated_custom_dropdown;
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -218,13 +219,14 @@ class CustomDropdown<T> extends StatefulWidget {
           'Only one of initialItem or controller can be specified at a time',
         ),
         assert(
-          initialItem == null || items!.contains(initialItem),
+          initialItem == null ||
+              items!.map((e) => e.value).toList().contains(initialItem),
           'Initial item must match with one of the item in items list.',
         ),
         assert(
           controller == null ||
               controller.value == null ||
-              items!.contains(controller.value),
+              items!.map((e) => e.value).toList().contains(controller.value),
           'Controller value must match with one of the item in items list.',
         ),
         _searchType = null,
