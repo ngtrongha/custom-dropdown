@@ -639,12 +639,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
                 final items = widget.items?.map((e) => e.value).toList() ?? [];
                 return _DropdownOverlay<T>(
                   onItemSelect: (T value) {
-                    final isActive = widget.items
-                            ?.firstWhere((e) => e.value == value,
-                                orElse: () => AnimationDropDownItem(
-                                    value: value, isActive: false))
-                            .isActive ??
-                        true;
+                    final isActive = widget.items!
+                        .firstWhere((e) => e.value == value)
+                        .isActive;
                     if (isActive) {
                       switch (widget._dropdownType) {
                         case _DropdownType.singleSelect:
