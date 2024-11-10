@@ -384,13 +384,15 @@ class CustomDropdown<T> extends StatefulWidget {
         assert(
           initialItems == null ||
               initialItems.isEmpty ||
-              initialItems.any((e) => items!.contains(e)),
+              initialItems
+                  .any((e) => items!.map((e) => e.value).toList().contains(e)),
           'Initial items must match with the items in the items list.',
         ),
         assert(
           multiSelectController == null ||
               multiSelectController.value.isEmpty ||
-              multiSelectController.value.any((e) => items!.contains(e)),
+              multiSelectController.value
+                  .any((e) => items!.map((e) => e.value).toList().contains(e)),
           'Controller value must match with one of the item in items list.',
         ),
         _searchType = null,
@@ -447,13 +449,15 @@ class CustomDropdown<T> extends StatefulWidget {
         assert(
           initialItems == null ||
               initialItems.isEmpty ||
-              initialItems.any((e) => items!.contains(e)),
+              initialItems
+                  .any((e) => items!.map((e) => e.value).toList().contains(e)),
           'Initial items must match with the items in the items list.',
         ),
         assert(
           multiSelectController == null ||
               multiSelectController.value.isEmpty ||
-              multiSelectController.value.any((e) => items!.contains(e)),
+              multiSelectController.value
+                  .any((e) => items!.map((e) => e.value).toList().contains(e)),
           'Controller value must match with one of the item in items list.',
         ),
         _searchType = _SearchType.onListData,
