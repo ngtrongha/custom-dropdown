@@ -26,7 +26,7 @@ class _SearchDropdownState extends State<SearchDropdown> {
   Widget build(BuildContext context) {
     return CustomDropdown<String>.search(
       hintText: 'Select cuisines',
-      items: _list,
+      items: _list.map((e) => AnimationDropDownItem(value: e)).toList(),
       initialItem: selectedItem,
       overlayHeight: 342,
       onChanged: (value) {
@@ -46,7 +46,7 @@ class MultiSelectSearchDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomDropdown<String>.multiSelectSearch(
       hintText: 'Select cuisines',
-      items: _list,
+      items: _list.map((e) => AnimationDropDownItem(value: e)).toList(),
       onListChanged: (value) {
         log('MultiSelectSearchDropdown onChanged value: $value');
       },

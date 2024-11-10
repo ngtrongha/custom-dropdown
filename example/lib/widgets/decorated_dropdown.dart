@@ -11,7 +11,7 @@ class DecoratedDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomDropdown<Job>.search(
-      items: jobItems,
+      items: jobItems.map((e) => AnimationDropDownItem(value: e)).toList(),
       initialItem: jobItems[2],
       hintText: 'Select job role',
       searchHintText: 'Search job role',
@@ -99,7 +99,7 @@ class MultiSelectDecoratedDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomDropdown<Job>.multiSelectSearch(
-      items: jobItems,
+      items: jobItems.map((e) => AnimationDropDownItem(value: e)).toList(),
       hintText: 'Select job role',
       searchHintText: 'Search job role',
       closedHeaderPadding: const EdgeInsets.all(20),

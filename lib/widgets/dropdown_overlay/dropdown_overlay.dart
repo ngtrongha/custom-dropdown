@@ -346,12 +346,12 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                             scrollbarTheme: decoration
                                     ?.overlayScrollbarDecoration ??
                                 ScrollbarThemeData(
-                                  thumbVisibility: MaterialStateProperty.all(
+                                  thumbVisibility: WidgetStateProperty .all(
                                     true,
                                   ),
-                                  thickness: MaterialStateProperty.all(5),
+                                  thickness: WidgetStateProperty .all(5),
                                   radius: const Radius.circular(4),
-                                  thumbColor: MaterialStateProperty.all(
+                                  thumbColor: WidgetStateProperty .all(
                                     Colors.grey[300],
                                   ),
                                 ),

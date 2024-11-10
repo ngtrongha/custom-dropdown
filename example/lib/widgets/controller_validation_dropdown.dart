@@ -27,7 +27,8 @@ class _ControllerValidationDropdownState
           CustomDropdown<Job>(
             controller: controller,
             hintText: 'Select job role',
-            items: jobItems,
+            items:
+                jobItems.map((e) => AnimationDropDownItem(value: e)).toList(),
             onChanged: (value) {
               log('ControllerValidationDropdown onChanged value: $value');
             },

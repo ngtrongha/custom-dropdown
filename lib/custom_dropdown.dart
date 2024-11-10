@@ -14,6 +14,7 @@ part 'models/disabled_decoration.dart';
 part 'models/list_item_decoration.dart';
 part 'models/controllers.dart';
 part 'models/search_field_decoration.dart';
+part 'models/item.dart';
 // utils
 part 'utils/signatures.dart';
 // widgets
@@ -49,7 +50,7 @@ const _defaultErrorStyle = TextStyle(
 
 class CustomDropdown<T> extends StatefulWidget {
   /// The list of items user can select.
-  final List<T>? items;
+  final List<AnimationDropDownItem<T>>? items;
 
   /// Initial selected item from the list of [items].
   final T? initialItem;
@@ -632,25 +633,35 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
               overlayPortalController: widget.overlayController,
               visibility: widget.visibility,
               overlay: (size, hideCallback) {
+                final items = widget.items?.map((e) => e.value).toList() ?? [];
                 return _DropdownOverlay<T>(
                   onItemSelect: (T value) {
-                    switch (widget._dropdownType) {
-                      case _DropdownType.singleSelect:
-                        selectedItemNotifier.value = value;
-                      case _DropdownType.multipleSelect:
-                        final currentVal = selectedItemsNotifier.value.toList();
-                        if (currentVal.contains(value)) {
-                          currentVal.remove(value);
-                        } else {
-                          currentVal.add(value);
-                        }
-                        selectedItemsNotifier.value = currentVal;
+                    final isActive = widget.items
+                            ?.firstWhere((e) => e.value == value,
+                                orElse: () => AnimationDropDownItem(
+                                    value: value, isActive: false))
+                            .isActive ??
+                        true;
+                    if (isActive) {
+                      switch (widget._dropdownType) {
+                        case _DropdownType.singleSelect:
+                          selectedItemNotifier.value = value;
+                        case _DropdownType.multipleSelect:
+                          final currentVal =
+                              selectedItemsNotifier.value.toList();
+                          if (currentVal.contains(value)) {
+                            currentVal.remove(value);
+                          } else {
+                            currentVal.add(value);
+                          }
+                          selectedItemsNotifier.value = currentVal;
+                      }
                     }
                   },
                   noResultFoundText:
                       widget.noResultFoundText ?? 'No result found.',
                   noResultFoundBuilder: widget.noResultFoundBuilder,
-                  items: widget.items ?? [],
+                  items: items,
                   itemsScrollCtrl: widget.itemsScrollController,
                   selectedItemNotifier: selectedItemNotifier,
                   selectedItemsNotifier: selectedItemsNotifier,
