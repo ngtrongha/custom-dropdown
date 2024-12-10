@@ -630,7 +630,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
           _formFieldState = formFieldState;
           return InputDecorator(
             decoration: InputDecoration(
-              constraints: decoration?.constraints,
               errorStyle: decoration?.errorStyle ?? _defaultErrorStyle,
               errorText: formFieldState.errorText,
               border: InputBorder.none,
