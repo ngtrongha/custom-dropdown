@@ -1,7 +1,6 @@
 library animated_custom_dropdown;
 
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -185,6 +184,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final _SearchType? _searchType;
 
   final _DropdownType _dropdownType;
+  final BoxConstraints? constraints;
 
   CustomDropdown({
     super.key,
@@ -214,6 +214,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.excludeSelected = true,
     this.enabled = true,
     this.disabledDecoration,
+    this.constraints,
   })  : assert(
           initialItem == null || controller == null,
           'Only one of initialItem or controller can be specified at a time',
@@ -276,6 +277,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.enabled = true,
     this.disabledDecoration,
     this.closeDropDownOnClearFilterSearch = false,
+    this.constraints,
   })  : assert(
           initialItem == null || controller == null,
           'Only one of initialItem or controller can be specified at a time',
@@ -337,6 +339,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.enabled = true,
     this.disabledDecoration,
     this.closeDropDownOnClearFilterSearch = false,
+    this.constraints,
   })  : assert(
           initialItem == null || controller == null,
           'Only one of initialItem or controller can be specified at a time',
@@ -377,6 +380,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.listItemPadding,
     this.enabled = true,
     this.disabledDecoration,
+    this.constraints,
   })  : assert(
           initialItems == null || multiSelectController == null,
           'Only one of initialItems or controller can be specified at a time',
@@ -442,6 +446,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.enabled = true,
     this.disabledDecoration,
     this.closeDropDownOnClearFilterSearch = false,
+    this.constraints,
   })  : assert(
           initialItems == null || multiSelectController == null,
           'Only one of initialItems or controller can be specified at a time',
@@ -506,6 +511,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.enabled = true,
     this.disabledDecoration,
     this.closeDropDownOnClearFilterSearch = false,
+    this.constraints,
   })  : assert(
           initialItems == null || multiSelectController == null,
           'Only one of initialItems or controller can be specified at a time',
@@ -631,10 +637,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
           _formFieldState = formFieldState;
           return InputDecorator(
             decoration: InputDecoration(
+              constraints: widget.constraints,
               errorStyle: decoration?.errorStyle ?? _defaultErrorStyle,
               errorText: formFieldState.errorText,
               border: InputBorder.none,
-              contentPadding: EdgeInsets.zero,
             ),
             child: _OverlayBuilder(
               overlayPortalController: widget.overlayController,
