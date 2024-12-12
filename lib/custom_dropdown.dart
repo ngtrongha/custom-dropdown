@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart'; 
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 export 'custom_dropdown.dart';
 
 // models
@@ -524,6 +524,55 @@ class CustomDropdown<T> extends StatefulWidget {
         headerBuilder = null,
         excludeSelected = false,
         validator = null;
+
+  const CustomDropdown.searchRequestInfiniteScrollPagination({
+    super.key,
+    required this.futureRequest,
+    required this.onChanged,
+    required this.pagingController,
+    this.futureRequestDelay,
+    this.initialItem,
+    this.items,
+    this.controller,
+    this.itemsScrollController,
+    this.hintText,
+    this.decoration,
+    this.visibility,
+    this.dropdownPlacement = DropdownPlacement.auto,
+    this.overlayController,
+    this.searchHintText,
+    this.noResultFoundText,
+    this.listItemBuilder,
+    this.headerBuilder,
+    this.hintBuilder,
+    this.noResultFoundBuilder,
+    this.validator,
+    this.validateOnChange = true,
+    this.maxlines = 1,
+    this.overlayHeight,
+    this.closedHeaderPadding,
+    this.expandedHeaderPadding,
+    this.itemsListPadding,
+    this.listItemPadding,
+    this.searchRequestLoadingIndicator,
+    this.excludeSelected = true,
+    this.canCloseOutsideBounds = true,
+    this.hideSelectedFieldWhenExpanded = false,
+    this.enabled = true,
+    this.disabledDecoration,
+    this.closeDropDownOnClearFilterSearch = false,
+  })  : assert(
+          initialItem == null || controller == null,
+          'Only one of initialItem or controller can be specified at a time',
+        ),
+        _searchType = _SearchType.onRequestData,
+        _dropdownType = _DropdownType.singleSelect,
+        initialItems = null,
+        onListChanged = null,
+        listValidator = null,
+        headerListBuilder = null,
+        multiSelectController = null;
+
   const CustomDropdown.multiSelectSearchRequestInfiniteScrollPagination({
     super.key,
     required this.futureRequest,
