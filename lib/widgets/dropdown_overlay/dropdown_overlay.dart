@@ -39,7 +39,7 @@ class _DropdownOverlay<T> extends StatefulWidget {
   final CustomDropdownDecoration? decoration;
   final _DropdownType dropdownType;
   final DropdownPlacement dropdownPlacement;
-
+  final PagingController<int, T>? pagingController;
   const _DropdownOverlay({
     Key? key,
     required this.items,
@@ -74,6 +74,7 @@ class _DropdownOverlay<T> extends StatefulWidget {
     required this.searchType,
     required this.futureRequest,
     required this.futureRequestDelay,
+    required this.pagingController,
     required this.listItemBuilder,
     required this.headerListBuilder,
     required this.noResultFoundBuilder,
@@ -275,6 +276,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
     // items list
     final list = items.isNotEmpty
         ? _ItemsList<T>(
+            pagingController: widget.pagingController,
             scrollController: scrollController,
             listItemBuilder: widget.listItemBuilder ?? defaultListItemBuilder,
             excludeSelected: items.length > 1 ? widget.excludeSelected : false,
@@ -343,18 +345,18 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                         },
                         child: Theme(
                           data: Theme.of(context).copyWith(
-                            scrollbarTheme: decoration
-                                    ?.overlayScrollbarDecoration ??
-                                ScrollbarThemeData(
-                                  thumbVisibility: WidgetStateProperty .all(
-                                    true,
-                                  ),
-                                  thickness: WidgetStateProperty .all(5),
-                                  radius: const Radius.circular(4),
-                                  thumbColor: WidgetStateProperty .all(
-                                    Colors.grey[300],
-                                  ),
-                                ),
+                            scrollbarTheme:
+                                decoration?.overlayScrollbarDecoration ??
+                                    ScrollbarThemeData(
+                                      thumbVisibility: WidgetStateProperty.all(
+                                        true,
+                                      ),
+                                      thickness: WidgetStateProperty.all(5),
+                                      radius: const Radius.circular(4),
+                                      thumbColor: WidgetStateProperty.all(
+                                        Colors.grey[300],
+                                      ),
+                                    ),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
