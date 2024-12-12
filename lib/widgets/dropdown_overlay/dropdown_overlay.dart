@@ -39,8 +39,7 @@ class _DropdownOverlay<T> extends StatefulWidget {
   final CustomDropdownDecoration? decoration;
   final _DropdownType dropdownType;
   final DropdownPlacement dropdownPlacement;
-  final PagingController<int, T>? pagingController;
-  final void Function(String)? onChanged;
+  final PagingController<int, T>? pagingController; 
   const _DropdownOverlay({
     Key? key,
     required this.items,
@@ -78,8 +77,7 @@ class _DropdownOverlay<T> extends StatefulWidget {
     required this.pagingController,
     required this.listItemBuilder,
     required this.headerListBuilder,
-    required this.noResultFoundBuilder,
-    this.onChanged,
+    required this.noResultFoundBuilder, 
   });
 
   @override
@@ -402,8 +400,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                               if (onSearch &&
                                   widget.searchType == _SearchType.onListData)
                                 if (!widget.hideSelectedFieldWhenOpen)
-                                  _SearchField<T>.forListData(
-                                    onChanged: widget.onChanged,
+                                  _SearchField<T>.forListData( 
                                     items: widget.items,
                                     searchHintText: widget.searchHintText,
                                     onSearchedItems: (val) {
@@ -431,8 +428,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                                             const SizedBox(width: 12),
                                           ],
                                           Expanded(
-                                            child: _SearchField<T>.forListData(
-                                              onChanged: widget.onChanged,
+                                            child: _SearchField<T>.forListData( 
                                               items: widget.items,
                                               searchHintText:
                                                   widget.searchHintText,
@@ -540,7 +536,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                                       ),
                                     )
                               else
-                                items.length > 4 ? Expanded(child: list) : list
+                                Expanded(child: list)
                             ],
                           ),
                         ),
