@@ -9,13 +9,14 @@ class _SearchField<T> extends StatefulWidget {
   final Duration? futureRequestDelay;
   final ValueChanged<bool>? onFutureRequestLoading, mayFoundResult;
   final SearchFieldDecoration? decoration;
-
+  final void Function(String)? onChanged;
   const _SearchField.forListData({
     super.key,
     required this.items,
     required this.onSearchedItems,
     required this.searchHintText,
     required this.decoration,
+    this.onChanged,
   })  : searchType = _SearchType.onListData,
         futureRequest = null,
         futureRequestDelay = null,
@@ -32,6 +33,7 @@ class _SearchField<T> extends StatefulWidget {
     required this.onFutureRequestLoading,
     required this.mayFoundResult,
     required this.decoration,
+    this.onChanged,
   }) : searchType = _SearchType.onRequestData;
 
   @override
@@ -104,30 +106,34 @@ class _SearchFieldState<T> extends State<_SearchField<T>> {
         focusNode: focusNode,
         style: widget.decoration?.textStyle,
         onChanged: (val) async {
-          if (val.isEmpty) {
-            isFieldEmpty = true;
-          } else if (isFieldEmpty) {
-            isFieldEmpty = false;
-          }
-
-          if (widget.searchType != null &&
-              widget.searchType == _SearchType.onRequestData &&
-              val.isNotEmpty) {
-            widget.onFutureRequestLoading!(true);
-
-            if (widget.futureRequestDelay != null) {
-              _delayTimer?.cancel();
-              _delayTimer =
-                  Timer(widget.futureRequestDelay ?? Duration.zero, () {
-                searchRequest(val);
-              });
-            } else {
-              searchRequest(val);
-            }
-          } else if (widget.searchType == _SearchType.onListData) {
-            onSearch(val);
+          if (widget.onChanged != null) {
+            widget.onChanged?.call(val);
           } else {
-            widget.onSearchedItems(widget.items);
+            if (val.isEmpty) {
+              isFieldEmpty = true;
+            } else if (isFieldEmpty) {
+              isFieldEmpty = false;
+            }
+
+            if (widget.searchType != null &&
+                widget.searchType == _SearchType.onRequestData &&
+                val.isNotEmpty) {
+              widget.onFutureRequestLoading!(true);
+
+              if (widget.futureRequestDelay != null) {
+                _delayTimer?.cancel();
+                _delayTimer =
+                    Timer(widget.futureRequestDelay ?? Duration.zero, () {
+                  searchRequest(val);
+                });
+              } else {
+                searchRequest(val);
+              }
+            } else if (widget.searchType == _SearchType.onListData) {
+              onSearch(val);
+            } else {
+              widget.onSearchedItems(widget.items);
+            }
           }
         },
         controller: searchCtrl,
