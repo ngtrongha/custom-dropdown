@@ -58,7 +58,7 @@ class _ItemsList<T> extends StatelessWidget {
                     padding: listItemPadding,
                     child: listItemBuilder(
                       context,
-                      items[index],
+                      item,
                       selected,
                       () => onItemSelect(item),
                     ),
