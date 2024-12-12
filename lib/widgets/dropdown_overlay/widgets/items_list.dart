@@ -32,7 +32,7 @@ class _ItemsList<T> extends StatelessWidget {
     if (pagingController != null) {
       return Scrollbar(
         controller: scrollController,
-        child: PagedSliverList(
+        child: PagedListView<int, T>(
           pagingController: pagingController!,
           builderDelegate: PagedChildBuilderDelegate<T>(
             itemBuilder: (context, item, index) {
