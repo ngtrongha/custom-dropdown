@@ -33,6 +33,7 @@ class _ItemsList<T> extends StatelessWidget {
       return Scrollbar(
         controller: scrollController,
         child: PagedListView<int, T>(
+          scrollController: scrollController,
           pagingController: pagingController!,
           builderDelegate: PagedChildBuilderDelegate<T>(
             itemBuilder: (context, item, index) {
