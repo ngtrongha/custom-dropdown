@@ -9,13 +9,14 @@ class _SearchField<T> extends StatefulWidget {
   final Duration? futureRequestDelay;
   final ValueChanged<bool>? onFutureRequestLoading, mayFoundResult;
   final SearchFieldDecoration? decoration;
-
+  final void Function(String)? onChanged;
   const _SearchField.forListData({
     super.key,
     required this.items,
     required this.onSearchedItems,
     required this.searchHintText,
     required this.decoration,
+    this.onChanged,
   })  : searchType = _SearchType.onListData,
         futureRequest = null,
         futureRequestDelay = null,
@@ -32,6 +33,7 @@ class _SearchField<T> extends StatefulWidget {
     required this.onFutureRequestLoading,
     required this.mayFoundResult,
     required this.decoration,
+    this.onChanged,
   }) : searchType = _SearchType.onRequestData;
 
   @override
@@ -104,6 +106,7 @@ class _SearchFieldState<T> extends State<_SearchField<T>> {
         focusNode: focusNode,
         style: widget.decoration?.textStyle,
         onChanged: (val) async {
+          widget.onChanged?.call(val);
           if (val.isEmpty) {
             isFieldEmpty = true;
           } else if (isFieldEmpty) {

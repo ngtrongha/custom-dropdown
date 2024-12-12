@@ -40,6 +40,7 @@ class _DropdownOverlay<T> extends StatefulWidget {
   final _DropdownType dropdownType;
   final DropdownPlacement dropdownPlacement;
   final PagingController<int, T>? pagingController;
+  final void Function(String)? onChanged;
   const _DropdownOverlay({
     Key? key,
     required this.items,
@@ -78,6 +79,7 @@ class _DropdownOverlay<T> extends StatefulWidget {
     required this.listItemBuilder,
     required this.headerListBuilder,
     required this.noResultFoundBuilder,
+    this.onChanged,
   });
 
   @override
@@ -401,6 +403,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                                   widget.searchType == _SearchType.onListData)
                                 if (!widget.hideSelectedFieldWhenOpen)
                                   _SearchField<T>.forListData(
+                                    onChanged: widget.onChanged,
                                     items: widget.items,
                                     searchHintText: widget.searchHintText,
                                     onSearchedItems: (val) {
@@ -429,6 +432,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                                           ],
                                           Expanded(
                                             child: _SearchField<T>.forListData(
+                                              onChanged: widget.onChanged,
                                               items: widget.items,
                                               searchHintText:
                                                   widget.searchHintText,
