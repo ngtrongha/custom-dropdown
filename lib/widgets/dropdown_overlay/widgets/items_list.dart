@@ -39,9 +39,8 @@ class _ItemsList<T> extends StatelessWidget {
             itemBuilder: (context, item, index) {
               final selected = switch (dropdownType) {
                 _DropdownType.singleSelect =>
-                  !excludeSelected && selectedItem == items[index],
-                _DropdownType.multipleSelect =>
-                  selectedItems.contains(items[index])
+                  !excludeSelected && selectedItem == item,
+                _DropdownType.multipleSelect => selectedItems.contains(item)
               };
               return Material(
                 color: Colors.transparent,
@@ -50,7 +49,7 @@ class _ItemsList<T> extends StatelessWidget {
                       ListItemDecoration._defaultSplashColor,
                   highlightColor: decoration?.highlightColor ??
                       ListItemDecoration._defaultHighlightColor,
-                  onTap: () => onItemSelect(items[index]),
+                  onTap: () => onItemSelect(item),
                   child: Ink(
                     color: selected
                         ? (decoration?.selectedColor ??
@@ -61,7 +60,7 @@ class _ItemsList<T> extends StatelessWidget {
                       context,
                       items[index],
                       selected,
-                      () => onItemSelect(items[index]),
+                      () => onItemSelect(item),
                     ),
                   ),
                 ),
