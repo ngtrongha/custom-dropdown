@@ -106,34 +106,31 @@ class _SearchFieldState<T> extends State<_SearchField<T>> {
         focusNode: focusNode,
         style: widget.decoration?.textStyle,
         onChanged: (val) async {
-          if (widget.onChanged != null) {
-            widget.onChanged?.call(val);
-          } else {
-            if (val.isEmpty) {
-              isFieldEmpty = true;
-            } else if (isFieldEmpty) {
-              isFieldEmpty = false;
-            }
+          widget.onChanged?.call(val);
+          if (val.isEmpty) {
+            isFieldEmpty = true;
+          } else if (isFieldEmpty) {
+            isFieldEmpty = false;
+          }
 
-            if (widget.searchType != null &&
-                widget.searchType == _SearchType.onRequestData &&
-                val.isNotEmpty) {
-              widget.onFutureRequestLoading!(true);
+          if (widget.searchType != null &&
+              widget.searchType == _SearchType.onRequestData &&
+              val.isNotEmpty) {
+            widget.onFutureRequestLoading!(true);
 
-              if (widget.futureRequestDelay != null) {
-                _delayTimer?.cancel();
-                _delayTimer =
-                    Timer(widget.futureRequestDelay ?? Duration.zero, () {
-                  searchRequest(val);
-                });
-              } else {
+            if (widget.futureRequestDelay != null) {
+              _delayTimer?.cancel();
+              _delayTimer =
+                  Timer(widget.futureRequestDelay ?? Duration.zero, () {
                 searchRequest(val);
-              }
-            } else if (widget.searchType == _SearchType.onListData) {
-              onSearch(val);
+              });
             } else {
-              widget.onSearchedItems(widget.items);
+              searchRequest(val);
             }
+          } else if (widget.searchType == _SearchType.onListData) {
+            onSearch(val);
+          } else {
+            widget.onSearchedItems(widget.items);
           }
         },
         controller: searchCtrl,
