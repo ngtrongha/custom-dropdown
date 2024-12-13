@@ -3,8 +3,7 @@ library animated_custom_dropdown;
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:flutter/scheduler.dart'; 
 export 'custom_dropdown.dart';
 
 // models
@@ -184,8 +183,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final _SearchType? _searchType;
 
   final _DropdownType _dropdownType;
-
-  final PagingController<int, T>? pagingController;
+ 
   CustomDropdown(
       {super.key,
       required this.items,
@@ -233,7 +231,7 @@ class CustomDropdown<T> extends StatefulWidget {
         _searchType = null,
         _dropdownType = _DropdownType.singleSelect,
         futureRequest = null,
-        pagingController = null,
+        
         futureRequestDelay = null,
         noResultFoundBuilder = null,
         noResultFoundText = null,
@@ -298,7 +296,7 @@ class CustomDropdown<T> extends StatefulWidget {
         _dropdownType = _DropdownType.singleSelect,
         futureRequest = null,
         futureRequestDelay = null,
-        pagingController = null,
+        
         initialItems = null,
         onListChanged = null,
         listValidator = null,
@@ -348,7 +346,7 @@ class CustomDropdown<T> extends StatefulWidget {
         ),
         _searchType = _SearchType.onRequestData,
         _dropdownType = _DropdownType.singleSelect,
-        pagingController = null,
+        
         initialItems = null,
         onListChanged = null,
         listValidator = null,
@@ -412,7 +410,7 @@ class CustomDropdown<T> extends StatefulWidget {
         excludeSelected = false,
         futureRequest = null,
         futureRequestDelay = null,
-        pagingController = null,
+        
         noResultFoundBuilder = null,
         searchHintText = null,
         searchRequestLoadingIndicator = null,
@@ -478,7 +476,7 @@ class CustomDropdown<T> extends StatefulWidget {
         headerBuilder = null,
         futureRequest = null,
         futureRequestDelay = null,
-        pagingController = null,
+        
         searchRequestLoadingIndicator = null;
 
   const CustomDropdown.multiSelectSearchRequest(
@@ -523,110 +521,14 @@ class CustomDropdown<T> extends StatefulWidget {
         ),
         _searchType = _SearchType.onRequestData,
         _dropdownType = _DropdownType.multipleSelect,
-        pagingController = null,
+        
         initialItem = null,
         onChanged = null,
         headerBuilder = null,
         excludeSelected = false,
         validator = null;
 
-  const CustomDropdown.searchRequestInfiniteScrollPagination(
-      {super.key,
-      required this.futureRequest,
-      required this.onChanged,
-      required this.pagingController,
-      this.futureRequestDelay,
-      this.initialItem,
-      this.items,
-      this.controller,
-      this.itemsScrollController,
-      this.hintText,
-      this.decoration,
-      this.visibility,
-      this.dropdownPlacement = DropdownPlacement.auto,
-      this.overlayController,
-      this.searchHintText,
-      this.noResultFoundText,
-      this.listItemBuilder,
-      this.headerBuilder,
-      this.hintBuilder,
-      this.noResultFoundBuilder,
-      this.validator,
-      this.validateOnChange = true,
-      this.maxlines = 1,
-      this.overlayHeight,
-      this.closedHeaderPadding,
-      this.expandedHeaderPadding,
-      this.itemsListPadding,
-      this.listItemPadding,
-      this.searchRequestLoadingIndicator,
-      this.excludeSelected = true,
-      this.canCloseOutsideBounds = true,
-      this.hideSelectedFieldWhenExpanded = false,
-      this.enabled = true,
-      this.disabledDecoration,
-      this.closeDropDownOnClearFilterSearch = false,
-      t})
-      : assert(
-          initialItem == null || controller == null,
-          'Only one of initialItem or controller can be specified at a time',
-        ),
-        _searchType = _SearchType.onRequestData,
-        _dropdownType = _DropdownType.singleSelect,
-        initialItems = null,
-        onListChanged = null,
-        listValidator = null,
-        headerListBuilder = null,
-        multiSelectController = null;
-
-  const CustomDropdown.multiSelectSearchRequestInfiniteScrollPagination(
-      {super.key,
-      required this.futureRequest,
-      required this.onListChanged,
-      required this.pagingController,
-      this.multiSelectController,
-      this.futureRequestDelay,
-      this.initialItems,
-      this.items,
-      this.controller,
-      this.itemsScrollController,
-      this.overlayController,
-      this.visibility,
-      this.dropdownPlacement = DropdownPlacement.auto,
-      this.hintText,
-      this.decoration,
-      this.searchHintText,
-      this.noResultFoundText,
-      this.headerListBuilder,
-      this.listItemBuilder,
-      this.hintBuilder,
-      this.noResultFoundBuilder,
-      this.listValidator,
-      this.validateOnChange = true,
-      this.maxlines = 1,
-      this.overlayHeight,
-      this.searchRequestLoadingIndicator,
-      this.closedHeaderPadding,
-      this.expandedHeaderPadding,
-      this.itemsListPadding,
-      this.listItemPadding,
-      this.canCloseOutsideBounds = true,
-      this.hideSelectedFieldWhenExpanded = false,
-      this.enabled = true,
-      this.disabledDecoration,
-      this.closeDropDownOnClearFilterSearch = false,
-      t})
-      : assert(
-          initialItems == null || multiSelectController == null,
-          'Only one of initialItems or controller can be specified at a time',
-        ),
-        _searchType = _SearchType.onRequestData,
-        _dropdownType = _DropdownType.multipleSelect,
-        initialItem = null,
-        onChanged = null,
-        headerBuilder = null,
-        excludeSelected = false,
-        validator = null;
+  
   @override
   State<CustomDropdown<T>> createState() => _CustomDropdownState<T>();
 }
@@ -806,8 +708,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
                   searchRequestLoadingIndicator:
                       widget.searchRequestLoadingIndicator,
                   dropdownType: widget._dropdownType,
-                  dropdownPlacement: widget.dropdownPlacement,
-                  pagingController: widget.pagingController,
+                  dropdownPlacement: widget.dropdownPlacement, 
                 );
               },
               child: (showCallback) {

@@ -9,8 +9,7 @@ class _ItemsList<T> extends StatelessWidget {
   final EdgeInsets itemsListPadding, listItemPadding;
   final _ListItemBuilder<T> listItemBuilder;
   final ListItemDecoration? decoration;
-  final _DropdownType dropdownType;
-  final PagingController<int, T>? pagingController;
+  final _DropdownType dropdownType; 
   const _ItemsList({
     super.key,
     required this.scrollController,
@@ -23,53 +22,12 @@ class _ItemsList<T> extends StatelessWidget {
     required this.listItemBuilder,
     required this.selectedItems,
     required this.decoration,
-    required this.dropdownType,
-    required this.pagingController,
+    required this.dropdownType, 
   });
 
   @override
   Widget build(BuildContext context) {
-    if (pagingController != null) {
-      return Scrollbar(
-        controller: scrollController,
-        child: PagedListView<int, T>(
-          scrollController: scrollController,
-          pagingController: pagingController!,
-          builderDelegate: PagedChildBuilderDelegate<T>(
-            itemBuilder: (context, item, index) {
-              final selected = switch (dropdownType) {
-                _DropdownType.singleSelect =>
-                  !excludeSelected && selectedItem == item,
-                _DropdownType.multipleSelect => selectedItems.contains(item)
-              };
-              return Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  splashColor: decoration?.splashColor ??
-                      ListItemDecoration._defaultSplashColor,
-                  highlightColor: decoration?.highlightColor ??
-                      ListItemDecoration._defaultHighlightColor,
-                  onTap: () => onItemSelect(item),
-                  child: Ink(
-                    color: selected
-                        ? (decoration?.selectedColor ??
-                            ListItemDecoration._defaultSelectedColor)
-                        : Colors.transparent,
-                    padding: listItemPadding,
-                    child: listItemBuilder(
-                      context,
-                      item,
-                      selected,
-                      () => onItemSelect(item),
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      );
-    }
+     
     return Scrollbar(
       controller: scrollController,
       child: ListView.builder(
