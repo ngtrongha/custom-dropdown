@@ -129,7 +129,8 @@ class _DropDownFieldState<T> extends State<_DropDownField<T>> {
           color: widget.fillColor ??
               (widget.enabled
                   ? CustomDropdownDecoration._defaultFillColor
-                  : CustomDropdownDecoration._defaultFillColor.withOpacity(.5)),
+                  : CustomDropdownDecoration._defaultFillColor
+                      .withValues(alpha: .5)),
           border: widget.border,
           borderRadius: widget.borderRadius ?? _defaultBorderRadius,
           boxShadow: widget.shadow,
@@ -156,7 +157,7 @@ class _DropDownFieldState<T> extends State<_DropDownField<T>> {
                     ? _defaultOverlayIconDown
                     : Icon(
                         Icons.keyboard_arrow_down_rounded,
-                        color: Colors.black.withOpacity(.5),
+                        color: Colors.black.withValues(alpha: .5),
                         size: 20,
                       )),
           ],

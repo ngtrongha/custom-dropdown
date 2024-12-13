@@ -3,7 +3,7 @@ library animated_custom_dropdown;
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart'; 
+import 'package:flutter/scheduler.dart';
 export 'custom_dropdown.dart';
 
 // models
@@ -183,7 +183,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final _SearchType? _searchType;
 
   final _DropdownType _dropdownType;
- 
+
   CustomDropdown(
       {super.key,
       required this.items,
@@ -231,7 +231,6 @@ class CustomDropdown<T> extends StatefulWidget {
         _searchType = null,
         _dropdownType = _DropdownType.singleSelect,
         futureRequest = null,
-        
         futureRequestDelay = null,
         noResultFoundBuilder = null,
         noResultFoundText = null,
@@ -296,7 +295,6 @@ class CustomDropdown<T> extends StatefulWidget {
         _dropdownType = _DropdownType.singleSelect,
         futureRequest = null,
         futureRequestDelay = null,
-        
         initialItems = null,
         onListChanged = null,
         listValidator = null,
@@ -346,7 +344,6 @@ class CustomDropdown<T> extends StatefulWidget {
         ),
         _searchType = _SearchType.onRequestData,
         _dropdownType = _DropdownType.singleSelect,
-        
         initialItems = null,
         onListChanged = null,
         listValidator = null,
@@ -410,7 +407,6 @@ class CustomDropdown<T> extends StatefulWidget {
         excludeSelected = false,
         futureRequest = null,
         futureRequestDelay = null,
-        
         noResultFoundBuilder = null,
         searchHintText = null,
         searchRequestLoadingIndicator = null,
@@ -476,7 +472,6 @@ class CustomDropdown<T> extends StatefulWidget {
         headerBuilder = null,
         futureRequest = null,
         futureRequestDelay = null,
-        
         searchRequestLoadingIndicator = null;
 
   const CustomDropdown.multiSelectSearchRequest(
@@ -521,14 +516,12 @@ class CustomDropdown<T> extends StatefulWidget {
         ),
         _searchType = _SearchType.onRequestData,
         _dropdownType = _DropdownType.multipleSelect,
-        
         initialItem = null,
         onChanged = null,
         headerBuilder = null,
         excludeSelected = false,
         validator = null;
 
-  
   @override
   State<CustomDropdown<T>> createState() => _CustomDropdownState<T>();
 }
@@ -642,10 +635,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
           _formFieldState = formFieldState;
           return InputDecorator(
             decoration: InputDecoration(
-              errorStyle: decoration?.errorStyle ?? _defaultErrorStyle,
-              errorText: formFieldState.errorText,
-              border: InputBorder.none,
-            ),
+                errorStyle: decoration?.errorStyle ?? _defaultErrorStyle,
+                errorText: formFieldState.errorText,
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.zero),
             child: _OverlayBuilder(
               overlayPortalController: widget.overlayController,
               visibility: widget.visibility,
@@ -708,7 +701,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
                   searchRequestLoadingIndicator:
                       widget.searchRequestLoadingIndicator,
                   dropdownType: widget._dropdownType,
-                  dropdownPlacement: widget.dropdownPlacement, 
+                  dropdownPlacement: widget.dropdownPlacement,
                 );
               },
               child: (showCallback) {
