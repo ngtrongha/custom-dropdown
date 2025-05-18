@@ -180,6 +180,16 @@ class CustomDropdown<T> extends StatefulWidget {
   /// You have to explicitly check for [overlayController] visibility states using [overlayController.isShowing] property.
   final Function(bool)? visibility;
 
+  /// Called when scrolling reaches the end of the list.
+  /// Use this to load more items when paginating.
+  final Future<void> Function()? onLoadMore;
+
+  /// Whether more items are being loaded.
+  final bool isLoadingMore;
+
+  /// Widget to display while loading more items.
+  final Widget? loadMoreIndicator;
+
   final _SearchType? _searchType;
 
   final _DropdownType _dropdownType;
@@ -212,21 +222,13 @@ class CustomDropdown<T> extends StatefulWidget {
       this.excludeSelected = true,
       this.enabled = true,
       this.disabledDecoration,
+      this.onLoadMore,
+      this.isLoadingMore = false,
+      this.loadMoreIndicator,
       t})
       : assert(
           initialItem == null || controller == null,
           'Only one of initialItem or controller can be specified at a time',
-        ),
-        assert(
-          initialItem == null ||
-              items!.map((e) => e.value).toList().contains(initialItem),
-          'Initial item must match with one of the item in items list.',
-        ),
-        assert(
-          controller == null ||
-              controller.value == null ||
-              items!.map((e) => e.value).toList().contains(controller.value),
-          'Controller value must match with one of the item in items list.',
         ),
         _searchType = null,
         _dropdownType = _DropdownType.singleSelect,
@@ -275,21 +277,13 @@ class CustomDropdown<T> extends StatefulWidget {
       this.enabled = true,
       this.disabledDecoration,
       this.closeDropDownOnClearFilterSearch = false,
+      this.onLoadMore,
+      this.isLoadingMore = false,
+      this.loadMoreIndicator,
       t})
       : assert(
           initialItem == null || controller == null,
           'Only one of initialItem or controller can be specified at a time',
-        ),
-        assert(
-          initialItem == null ||
-              items!.map((e) => e.value).toList().contains(initialItem),
-          'Initial item must match with one of the item in items list.',
-        ),
-        assert(
-          controller == null ||
-              controller.value == null ||
-              items!.map((e) => e.value).toList().contains(controller.value),
-          'Controller value must match with one of the item in items list.',
         ),
         _searchType = _SearchType.onListData,
         _dropdownType = _DropdownType.singleSelect,
@@ -337,6 +331,9 @@ class CustomDropdown<T> extends StatefulWidget {
       this.enabled = true,
       this.disabledDecoration,
       this.closeDropDownOnClearFilterSearch = false,
+      this.onLoadMore,
+      this.isLoadingMore = false,
+      this.loadMoreIndicator,
       t})
       : assert(
           initialItem == null || controller == null,
@@ -378,24 +375,13 @@ class CustomDropdown<T> extends StatefulWidget {
       this.listItemPadding,
       this.enabled = true,
       this.disabledDecoration,
+      this.onLoadMore,
+      this.isLoadingMore = false,
+      this.loadMoreIndicator,
       t})
       : assert(
           initialItems == null || multiSelectController == null,
           'Only one of initialItems or controller can be specified at a time',
-        ),
-        assert(
-          initialItems == null ||
-              initialItems.isEmpty ||
-              initialItems
-                  .any((e) => items!.map((e) => e.value).toList().contains(e)),
-          'Initial items must match with the items in the items list.',
-        ),
-        assert(
-          multiSelectController == null ||
-              multiSelectController.value.isEmpty ||
-              multiSelectController.value
-                  .any((e) => items!.map((e) => e.value).toList().contains(e)),
-          'Controller value must match with one of the item in items list.',
         ),
         _searchType = null,
         _dropdownType = _DropdownType.multipleSelect,
@@ -444,24 +430,13 @@ class CustomDropdown<T> extends StatefulWidget {
       this.enabled = true,
       this.disabledDecoration,
       this.closeDropDownOnClearFilterSearch = false,
+      this.onLoadMore,
+      this.isLoadingMore = false,
+      this.loadMoreIndicator,
       t})
       : assert(
           initialItems == null || multiSelectController == null,
           'Only one of initialItems or controller can be specified at a time',
-        ),
-        assert(
-          initialItems == null ||
-              initialItems.isEmpty ||
-              initialItems
-                  .any((e) => items!.map((e) => e.value).toList().contains(e)),
-          'Initial items must match with the items in the items list.',
-        ),
-        assert(
-          multiSelectController == null ||
-              multiSelectController.value.isEmpty ||
-              multiSelectController.value
-                  .any((e) => items!.map((e) => e.value).toList().contains(e)),
-          'Controller value must match with one of the item in items list.',
         ),
         _searchType = _SearchType.onListData,
         _dropdownType = _DropdownType.multipleSelect,
@@ -509,6 +484,9 @@ class CustomDropdown<T> extends StatefulWidget {
       this.enabled = true,
       this.disabledDecoration,
       this.closeDropDownOnClearFilterSearch = false,
+      this.onLoadMore,
+      this.isLoadingMore = false,
+      this.loadMoreIndicator,
       t})
       : assert(
           initialItems == null || multiSelectController == null,
@@ -702,6 +680,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
                       widget.searchRequestLoadingIndicator,
                   dropdownType: widget._dropdownType,
                   dropdownPlacement: widget.dropdownPlacement,
+                  onLoadMore: widget.onLoadMore,
+                  isLoadingMore: widget.isLoadingMore,
+                  loadMoreIndicator: widget.loadMoreIndicator,
                 );
               },
               child: (showCallback) {

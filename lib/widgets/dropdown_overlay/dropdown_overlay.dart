@@ -39,6 +39,9 @@ class _DropdownOverlay<T> extends StatefulWidget {
   final CustomDropdownDecoration? decoration;
   final _DropdownType dropdownType;
   final DropdownPlacement dropdownPlacement;
+  final Future<void> Function()? onLoadMore;
+  final bool isLoadingMore;
+  final Widget? loadMoreIndicator;
   const _DropdownOverlay({
     Key? key,
     required this.items,
@@ -76,6 +79,9 @@ class _DropdownOverlay<T> extends StatefulWidget {
     required this.listItemBuilder,
     required this.headerListBuilder,
     required this.noResultFoundBuilder,
+    this.onLoadMore,
+    this.isLoadingMore = false,
+    this.loadMoreIndicator,
   });
 
   @override
@@ -285,6 +291,9 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
             onItemSelect: onItemSelect,
             decoration: decoration?.listItemDecoration,
             dropdownType: widget.dropdownType,
+            onLoadMore: widget.onLoadMore,
+            isLoadingMore: widget.isLoadingMore,
+            loadMoreIndicator: widget.loadMoreIndicator,
           )
         : (mayFoundSearchRequestResult != null &&
                     !mayFoundSearchRequestResult!) ||

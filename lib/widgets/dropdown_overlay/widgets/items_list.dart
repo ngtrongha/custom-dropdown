@@ -1,6 +1,6 @@
 part of '../../../custom_dropdown.dart';
 
-class _ItemsList<T> extends StatelessWidget {
+class _ItemsList<T> extends StatefulWidget {
   final ScrollController scrollController;
   final T? selectedItem;
   final List<T> items, selectedItems;
@@ -9,7 +9,11 @@ class _ItemsList<T> extends StatelessWidget {
   final EdgeInsets itemsListPadding, listItemPadding;
   final _ListItemBuilder<T> listItemBuilder;
   final ListItemDecoration? decoration;
-  final _DropdownType dropdownType; 
+  final _DropdownType dropdownType;
+  final Future<void> Function()? onLoadMore;
+  final bool isLoadingMore;
+  final Widget? loadMoreIndicator;
+
   const _ItemsList({
     super.key,
     required this.scrollController,
@@ -22,44 +26,113 @@ class _ItemsList<T> extends StatelessWidget {
     required this.listItemBuilder,
     required this.selectedItems,
     required this.decoration,
-    required this.dropdownType, 
+    required this.dropdownType,
+    this.onLoadMore,
+    this.isLoadingMore = false,
+    this.loadMoreIndicator,
   });
 
   @override
+  State<_ItemsList<T>> createState() => _ItemsListState<T>();
+}
+
+class _ItemsListState<T> extends State<_ItemsList<T>> {
+  bool _isLoading = false;
+  Timer? _loadMoreDebouncer;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    widget.scrollController.removeListener(_scrollListener);
+    _loadMoreDebouncer?.cancel();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (widget.onLoadMore == null) return;
+
+    if (widget.scrollController.position.pixels >=
+        widget.scrollController.position.maxScrollExtent - 200) {
+      if (!_isLoading && !widget.isLoadingMore) {
+        _loadMoreDebouncer?.cancel();
+        _loadMoreDebouncer = Timer(const Duration(milliseconds: 200), () {
+          if (!_isLoading && !widget.isLoadingMore) {
+            _isLoading = true;
+            widget.onLoadMore!().then((_) {
+              if (mounted) {
+                _isLoading = false;
+              }
+            }).catchError((_) {
+              if (mounted) {
+                _isLoading = false;
+              }
+            });
+          }
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-     
     return Scrollbar(
-      controller: scrollController,
+      controller: widget.scrollController,
       child: ListView.builder(
-        controller: scrollController,
+        controller: widget.scrollController,
         shrinkWrap: true,
-        padding: itemsListPadding,
-        itemCount: items.length,
+        padding: widget.itemsListPadding,
+        itemCount: widget.items.length + (widget.onLoadMore != null ? 1 : 0),
+        cacheExtent: 1000,
         itemBuilder: (_, index) {
-          final selected = switch (dropdownType) {
-            _DropdownType.singleSelect =>
-              !excludeSelected && selectedItem == items[index],
-            _DropdownType.multipleSelect => selectedItems.contains(items[index])
+          if (index == widget.items.length) {
+            return widget.isLoadingMore
+                ? widget.loadMoreIndicator ??
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Center(
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      ),
+                    )
+                : const SizedBox.shrink();
+          }
+
+          final selected = switch (widget.dropdownType) {
+            _DropdownType.singleSelect => !widget.excludeSelected &&
+                widget.selectedItem == widget.items[index],
+            _DropdownType.multipleSelect =>
+              widget.selectedItems.contains(widget.items[index])
           };
+
           return Material(
             color: Colors.transparent,
             child: InkWell(
-              splashColor: decoration?.splashColor ??
+              splashColor: widget.decoration?.splashColor ??
                   ListItemDecoration._defaultSplashColor,
-              highlightColor: decoration?.highlightColor ??
+              highlightColor: widget.decoration?.highlightColor ??
                   ListItemDecoration._defaultHighlightColor,
-              onTap: () => onItemSelect(items[index]),
+              onTap: () => widget.onItemSelect(widget.items[index]),
               child: Ink(
                 color: selected
-                    ? (decoration?.selectedColor ??
+                    ? (widget.decoration?.selectedColor ??
                         ListItemDecoration._defaultSelectedColor)
                     : Colors.transparent,
-                padding: listItemPadding,
-                child: listItemBuilder(
+                padding: widget.listItemPadding,
+                child: widget.listItemBuilder(
                   context,
-                  items[index],
+                  widget.items[index],
                   selected,
-                  () => onItemSelect(items[index]),
+                  () => widget.onItemSelect(widget.items[index]),
                 ),
               ),
             ),

@@ -8,13 +8,13 @@ class _SearchField<T> extends StatefulWidget {
   final Future<List<T>> Function(String)? futureRequest;
   final Duration? futureRequestDelay;
   final ValueChanged<bool>? onFutureRequestLoading, mayFoundResult;
-  final SearchFieldDecoration? decoration; 
+  final SearchFieldDecoration? decoration;
   const _SearchField.forListData({
     super.key,
     required this.items,
     required this.onSearchedItems,
     required this.searchHintText,
-    required this.decoration, 
+    required this.decoration,
   })  : searchType = _SearchType.onListData,
         futureRequest = null,
         futureRequestDelay = null,
@@ -30,7 +30,7 @@ class _SearchField<T> extends StatefulWidget {
     required this.futureRequestDelay,
     required this.onFutureRequestLoading,
     required this.mayFoundResult,
-    required this.decoration, 
+    required this.decoration,
   }) : searchType = _SearchType.onRequestData;
 
   @override
@@ -42,6 +42,8 @@ class _SearchFieldState<T> extends State<_SearchField<T>> {
   bool isFieldEmpty = false;
   FocusNode focusNode = FocusNode();
   Timer? _delayTimer;
+  Timer? _searchDebouncer;
+  String _lastSearchQuery = '';
 
   @override
   void initState() {
@@ -56,39 +58,56 @@ class _SearchFieldState<T> extends State<_SearchField<T>> {
   void dispose() {
     searchCtrl.dispose();
     _delayTimer?.cancel();
+    _searchDebouncer?.cancel();
     super.dispose();
   }
 
   void onSearch(String query) {
-    final result = widget.items.where(
-      (item) {
-        if (item is CustomDropdownListFilter) {
-          return item.filter(query);
-        } else {
-          return item.toString().toLowerCase().contains(query.toLowerCase());
-        }
-      },
-    ).toList();
-    widget.onSearchedItems(result);
+    if (query == _lastSearchQuery) return;
+    _lastSearchQuery = query;
+
+    _searchDebouncer?.cancel();
+    _searchDebouncer = Timer(const Duration(milliseconds: 300), () {
+      final result = widget.items.where(
+        (item) {
+          if (item is CustomDropdownListFilter) {
+            return item.filter(query);
+          } else {
+            return item.toString().toLowerCase().contains(query.toLowerCase());
+          }
+        },
+      ).toList();
+      widget.onSearchedItems(result);
+    });
   }
 
   void onClear() {
     if (searchCtrl.text.isNotEmpty) {
       searchCtrl.clear();
+      _lastSearchQuery = '';
       widget.onSearchedItems(widget.items);
     }
   }
 
   void searchRequest(String val) async {
+    if (val == _lastSearchQuery) return;
+    _lastSearchQuery = val;
+
     List<T> result = [];
     try {
       result = await widget.futureRequest!(val);
-      widget.onFutureRequestLoading!(false);
+      if (mounted) {
+        widget.onFutureRequestLoading!(false);
+      }
     } catch (_) {
-      widget.onFutureRequestLoading!(false);
+      if (mounted) {
+        widget.onFutureRequestLoading!(false);
+      }
     }
-    widget.onSearchedItems(isFieldEmpty ? widget.items : result);
-    widget.mayFoundResult!(result.isNotEmpty);
+    if (mounted) {
+      widget.onSearchedItems(isFieldEmpty ? widget.items : result);
+      widget.mayFoundResult!(result.isNotEmpty);
+    }
 
     if (isFieldEmpty) {
       isFieldEmpty = false;
@@ -102,7 +121,7 @@ class _SearchFieldState<T> extends State<_SearchField<T>> {
       child: TextField(
         focusNode: focusNode,
         style: widget.decoration?.textStyle,
-        onChanged: (val) async { 
+        onChanged: (val) async {
           if (val.isEmpty) {
             isFieldEmpty = true;
           } else if (isFieldEmpty) {
