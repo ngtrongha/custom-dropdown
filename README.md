@@ -1,6 +1,6 @@
 # Custom Dropdown
 
-**Custom Dropdown** package lets you add customizable animated dropdown widget.
+A highly customizable dropdown widget for Flutter with search, multi-select, and pagination support.
 
 [![pub.dev](https://img.shields.io/pub/v/animated_custom_dropdown.svg?style=flat?logo=dart)](https://pub.dev/packages/animated_custom_dropdown)
 [![likes](https://img.shields.io/pub/likes/animated_custom_dropdown)](https://pub.dev/packages/animated_custom_dropdown/score)
@@ -13,14 +13,183 @@
 
 ## Features
 
-Lots of properties to use and customize dropdown widget as per your need. Also usable under Form widget for required validation.
+- Single and multi-select support
+- Search functionality with local and API data
+- Pagination support for large datasets
+- Customizable decoration
+- Form field integration
+- Controller support
+- Enabled/Disabled state
+- Dropdown placement options
+- Custom builders for items, headers, and more
 
-- Custom dropdown using constructor CustomDropdown<T>().
-- Custom dropdown with search field using named constructor CustomDropdown<T>.search().
-- Custom dropdown with search request field using named constructor CustomDropdown<T>.searchRequest().
-- Multi select custom dropdown using named constructor CustomDropdown<T>.multiSelect().
-- Multi select custom dropdown with search field using named constructor CustomDropdown<T>.multiSelectSearch().
-- Multi select custom dropdown with search request field using named constructor CustomDropdown<T>.multiSelectSearchRequest().
+## Pagination Support
+
+The dropdown now supports pagination for large datasets. When scrolling reaches near the end of the list, it will trigger a callback to load more items.
+
+```dart
+CustomDropdown<YourType>(
+  items: currentPageItems,
+  onChanged: (value) {
+    // Handle selection
+  },
+  onLoadMore: () async {
+    // Load more items from API
+    final newItems = await yourApi.getMoreItems();
+    setState(() {
+      currentPageItems.addAll(newItems);
+    });
+  },
+  isLoadingMore: isLoadingMore, // Set this to true while loading
+  loadMoreIndicator: YourCustomLoadingWidget(), // Optional custom loading widget
+)
+```
+
+### Pagination Properties
+
+- `onLoadMore`: Callback triggered when scrolling reaches near the end of the list
+- `isLoadingMore`: Boolean indicating if more items are being loaded
+- `loadMoreIndicator`: Custom widget to show while loading more items
+
+## Search Optimization
+
+The search functionality has been optimized with:
+
+- Debounce to prevent excessive API calls
+- Caching of search results
+- Improved error handling
+- Memory leak prevention
+
+## Performance Optimizations
+
+- Improved scroll performance with item caching
+- Debounced load more requests
+- Optimized search with debounce and caching
+- Memory leak prevention
+- Better state management
+- Improved error handling
+
+## Usage
+
+### Basic Usage
+
+```dart
+CustomDropdown<String>(
+  items: ['Item 1', 'Item 2', 'Item 3'],
+  onChanged: (value) {
+    print('Selected: $value');
+  },
+)
+```
+
+### With Search
+
+```dart
+CustomDropdown<String>.search(
+  items: ['Item 1', 'Item 2', 'Item 3'],
+  onChanged: (value) {
+    print('Selected: $value');
+  },
+)
+```
+
+### With API Search
+
+```dart
+CustomDropdown<String>.searchRequest(
+  futureRequest: (query) async {
+    // Return items from API
+    return await api.searchItems(query);
+  },
+  onChanged: (value) {
+    print('Selected: $value');
+  },
+)
+```
+
+### With Pagination
+
+```dart
+CustomDropdown<String>(
+  items: currentPageItems,
+  onChanged: (value) {
+    print('Selected: $value');
+  },
+  onLoadMore: () async {
+    setState(() => isLoadingMore = true);
+    final newItems = await api.getMoreItems();
+    setState(() {
+      currentPageItems.addAll(newItems);
+      isLoadingMore = false;
+    });
+  },
+  isLoadingMore: isLoadingMore,
+)
+```
+
+### Multi-select
+
+```dart
+CustomDropdown<String>.multiSelect(
+  items: ['Item 1', 'Item 2', 'Item 3'],
+  onListChanged: (values) {
+    print('Selected: $values');
+  },
+)
+```
+
+## Decoration
+
+The dropdown can be customized using `CustomDropdownDecoration`:
+
+```dart
+CustomDropdownDecoration(
+  closedBorder: Border.all(color: Colors.grey),
+  expandedBorder: Border.all(color: Colors.blue),
+  closedFillColor: Colors.white,
+  expandedFillColor: Colors.white,
+  // ... more decoration options
+)
+```
+
+## Controllers
+
+The dropdown supports controllers for programmatic control:
+
+```dart
+final controller = SingleSelectController<String>();
+
+CustomDropdown<String>(
+  controller: controller,
+  items: ['Item 1', 'Item 2', 'Item 3'],
+  onChanged: (value) {
+    print('Selected: $value');
+  },
+)
+
+// Later
+controller.value = 'Item 2';
+```
+
+## Form Integration
+
+The dropdown can be used in forms:
+
+```dart
+Form(
+  child: CustomDropdown<String>(
+    items: ['Item 1', 'Item 2', 'Item 3'],
+    validator: (value) {
+      if (value == null) return 'Please select an item';
+      return null;
+    },
+  ),
+)
+```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Preview
 
