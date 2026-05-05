@@ -5,7 +5,7 @@ import 'package:animated_custom_dropdown_example/models/job.dart';
 import 'package:flutter/material.dart';
 
 class ValidationDropdown extends StatelessWidget {
-  ValidationDropdown({Key? key}) : super(key: key);
+  ValidationDropdown({super.key});
 
   final _formKey = GlobalKey<FormState>();
 
@@ -53,7 +53,7 @@ class ValidationDropdown extends StatelessWidget {
 }
 
 class MultiSelectValidationDropdown extends StatelessWidget {
-  MultiSelectValidationDropdown({Key? key}) : super(key: key);
+  MultiSelectValidationDropdown({super.key});
 
   final _formKey = GlobalKey<FormState>();
 
@@ -66,7 +66,8 @@ class MultiSelectValidationDropdown extends StatelessWidget {
         children: [
           CustomDropdown<Job>.multiSelect(
             hintText: 'Select job role',
-            items: jobItems.map((e) => AnimationDropDownItem(value: e)).toList(),
+            items:
+                jobItems.map((e) => AnimationDropDownItem(value: e)).toList(),
             onListChanged: (value) {
               log('MultiSelectValidationDropdown onChanged value: $value');
             },

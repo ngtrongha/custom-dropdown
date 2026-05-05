@@ -205,10 +205,16 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
     displayOverlayBottom = widget.dropdownPlacement == DropdownPlacement.auto ||
         widget.dropdownPlacement == DropdownPlacement.bottom;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final render1 = key1.currentContext?.findRenderObject() as RenderBox;
-      final render2 = key2.currentContext?.findRenderObject() as RenderBox;
+      if (!mounted) {
+        return;
+      }
+      final render1 = key1.currentContext?.findRenderObject();
+      final render2 = key2.currentContext?.findRenderObject();
+      if (render1 is! RenderBox || render2 is! RenderBox) {
+        return;
+      }
       final screenHeight = MediaQuery.of(context).size.height;
-      double y = render1.localToGlobal(Offset.zero).dy;
+      final double y = render1.localToGlobal(Offset.zero).dy;
       if (screenHeight - y < render2.size.height &&
           widget.dropdownPlacement == DropdownPlacement.auto) {
         displayOverlayBottom = false;
@@ -225,7 +231,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
     if (widget.excludeSelected &&
         widget.items.length > 1 &&
         selectedItem != null) {
-      T value = selectedItem as T;
+      final T value = selectedItem as T;
       items = widget.items.where((item) => item != value).toList();
     } else {
       items = widget.items;
@@ -324,7 +330,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                     [
                       BoxShadow(
                         blurRadius: 24.0,
-                        color: Colors.black.withOpacity(.08),
+                        color: Colors.black.withValues(alpha: .08),
                         offset: _defaultOverlayShadowOffset,
                       ),
                     ],

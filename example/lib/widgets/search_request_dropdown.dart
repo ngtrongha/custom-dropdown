@@ -13,7 +13,7 @@ Future<List<Job>> _getFakeRequestData(String query) async {
 }
 
 class SearchRequestDropdown extends StatelessWidget {
-  const SearchRequestDropdown({Key? key}) : super(key: key);
+  const SearchRequestDropdown({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class SearchRequestDropdown extends StatelessWidget {
 }
 
 class MultiSelectSearchRequestDropdown extends StatelessWidget {
-  const MultiSelectSearchRequestDropdown({Key? key}) : super(key: key);
+  const MultiSelectSearchRequestDropdown({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -40,10 +40,11 @@ class _SearchField<T> extends StatefulWidget {
 class _SearchFieldState<T> extends State<_SearchField<T>> {
   final searchCtrl = TextEditingController();
   bool isFieldEmpty = false;
-  FocusNode focusNode = FocusNode();
+  final FocusNode focusNode = FocusNode();
   Timer? _delayTimer;
   Timer? _searchDebouncer;
   String _lastSearchQuery = '';
+  int _latestRequestId = 0;
 
   @override
   void initState() {
@@ -57,6 +58,7 @@ class _SearchFieldState<T> extends State<_SearchField<T>> {
   @override
   void dispose() {
     searchCtrl.dispose();
+    focusNode.dispose();
     _delayTimer?.cancel();
     _searchDebouncer?.cancel();
     super.dispose();
@@ -85,6 +87,7 @@ class _SearchFieldState<T> extends State<_SearchField<T>> {
     if (searchCtrl.text.isNotEmpty) {
       searchCtrl.clear();
       _lastSearchQuery = '';
+      _latestRequestId++;
       widget.onSearchedItems(widget.items);
     }
   }
@@ -93,21 +96,19 @@ class _SearchFieldState<T> extends State<_SearchField<T>> {
     if (val == _lastSearchQuery) return;
     _lastSearchQuery = val;
 
+    final requestId = ++_latestRequestId;
     List<T> result = [];
     try {
       result = await widget.futureRequest!(val);
-      if (mounted) {
-        widget.onFutureRequestLoading!(false);
-      }
     } catch (_) {
-      if (mounted) {
-        widget.onFutureRequestLoading!(false);
-      }
+      if (!mounted || requestId != _latestRequestId) return;
+      widget.onFutureRequestLoading!(false);
+      return;
     }
-    if (mounted) {
-      widget.onSearchedItems(isFieldEmpty ? widget.items : result);
-      widget.mayFoundResult!(result.isNotEmpty);
-    }
+    if (!mounted || requestId != _latestRequestId) return;
+    widget.onFutureRequestLoading!(false);
+    widget.onSearchedItems(isFieldEmpty ? widget.items : result);
+    widget.mayFoundResult!(result.isNotEmpty);
 
     if (isFieldEmpty) {
       isFieldEmpty = false;
@@ -145,6 +146,8 @@ class _SearchFieldState<T> extends State<_SearchField<T>> {
           } else if (widget.searchType == _SearchType.onListData) {
             onSearch(val);
           } else {
+            _latestRequestId++;
+            widget.onFutureRequestLoading?.call(false);
             widget.onSearchedItems(widget.items);
           }
         },
@@ -170,7 +173,7 @@ class _SearchFieldState<T> extends State<_SearchField<T>> {
               OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(
-                  color: Colors.grey.withOpacity(.25),
+                  color: Colors.grey.withValues(alpha: .25),
                   width: 1,
                 ),
               ),
@@ -178,7 +181,7 @@ class _SearchFieldState<T> extends State<_SearchField<T>> {
               OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(
-                  color: Colors.grey.withOpacity(.25),
+                  color: Colors.grey.withValues(alpha: .25),
                   width: 1,
                 ),
               ),
@@ -186,7 +189,7 @@ class _SearchFieldState<T> extends State<_SearchField<T>> {
               OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(
-                  color: Colors.grey.withOpacity(.25),
+                  color: Colors.grey.withValues(alpha: .25),
                   width: 1,
                 ),
               ),

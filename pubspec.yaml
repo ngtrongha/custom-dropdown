@@ -6,7 +6,7 @@ version: 3.1.1
 homepage: https://github.com/AbdullahChauhan/custom-dropdown
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.0.0 <6.0.0"
   flutter: ">=3.0.0"
 
 dependencies:
@@ -14,7 +14,7 @@ dependencies:
     sdk: flutter 
 
 dev_dependencies:
-  flutter_lints: ^3.0.1
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
 

@@ -5,7 +5,7 @@ import 'package:animated_custom_dropdown_example/models/job.dart';
 import 'package:flutter/material.dart';
 
 class MultiSelectDropdown extends StatelessWidget {
-  const MultiSelectDropdown({Key? key}) : super(key: key);
+  const MultiSelectDropdown({super.key});
 
   @override
   Widget build(BuildContext context) {

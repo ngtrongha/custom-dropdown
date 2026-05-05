@@ -1,4 +1,4 @@
-library animated_custom_dropdown;
+library;
 
 import 'dart:async';
 
@@ -194,7 +194,7 @@ class CustomDropdown<T> extends StatefulWidget {
 
   final _DropdownType _dropdownType;
 
-  CustomDropdown(
+  const CustomDropdown(
       {super.key,
       required this.items,
       required this.onChanged,
@@ -245,7 +245,7 @@ class CustomDropdown<T> extends StatefulWidget {
         closeDropDownOnClearFilterSearch = false,
         multiSelectController = null;
 
-  CustomDropdown.search(
+  const CustomDropdown.search(
       {super.key,
       required this.items,
       required this.onChanged,
@@ -347,7 +347,7 @@ class CustomDropdown<T> extends StatefulWidget {
         headerListBuilder = null,
         multiSelectController = null;
 
-  CustomDropdown.multiSelect(
+  const CustomDropdown.multiSelect(
       {super.key,
       required this.items,
       required this.onListChanged,
@@ -398,7 +398,7 @@ class CustomDropdown<T> extends StatefulWidget {
         searchRequestLoadingIndicator = null,
         closeDropDownOnClearFilterSearch = false;
 
-  CustomDropdown.multiSelectSearch(
+  const CustomDropdown.multiSelectSearch(
       {super.key,
       required this.items,
       required this.onListChanged,
@@ -508,6 +508,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
   final layerLink = LayerLink();
   late SingleSelectController<T?> selectedItemNotifier;
   late MultiSelectController<T> selectedItemsNotifier;
+  late bool _ownsSingleSelectController;
+  late bool _ownsMultiSelectController;
   FormFieldState<(T?, List<T>)>? _formFieldState;
 
   void _selectedItemListener() {
@@ -526,15 +528,50 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
     }
   }
 
+  AnimationDropDownItem<T>? _findItem(T value) {
+    final entries = widget.items;
+    if (entries == null) {
+      return null;
+    }
+    for (final item in entries) {
+      if (item.value == value) {
+        return item;
+      }
+    }
+    return null;
+  }
+
+  void _detachSingleSelectController({
+    required SingleSelectController<T?> controller,
+    required bool ownsController,
+  }) {
+    controller.removeListener(_selectedItemListener);
+    if (ownsController) {
+      controller.dispose();
+    }
+  }
+
+  void _detachMultiSelectController({
+    required MultiSelectController<T> controller,
+    required bool ownsController,
+  }) {
+    controller.removeListener(_selectedItemsListener);
+    if (ownsController) {
+      controller.dispose();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
     selectedItemNotifier =
         widget.controller ?? SingleSelectController(widget.initialItem);
+    _ownsSingleSelectController = widget.controller == null;
 
     selectedItemsNotifier = widget.multiSelectController ??
         MultiSelectController(widget.initialItems ?? []);
+    _ownsMultiSelectController = widget.multiSelectController == null;
 
     selectedItemNotifier.addListener(_selectedItemListener);
 
@@ -559,30 +596,44 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
       });
     }
 
-    if (widget.controller != oldWidget.controller &&
-        widget.controller != null) {
-      selectedItemNotifier = widget.controller!;
+    if (widget.controller != oldWidget.controller && mounted) {
+      final oldController = selectedItemNotifier;
+      final oldOwnsController = _ownsSingleSelectController;
+      selectedItemNotifier =
+          widget.controller ?? SingleSelectController(oldController.value);
+      _ownsSingleSelectController = widget.controller == null;
+      selectedItemNotifier.addListener(_selectedItemListener);
+      _detachSingleSelectController(
+        controller: oldController,
+        ownsController: oldOwnsController,
+      );
     }
 
     if (widget.multiSelectController != oldWidget.multiSelectController &&
-        widget.multiSelectController != null) {
-      selectedItemsNotifier = widget.multiSelectController!;
+        mounted) {
+      final oldController = selectedItemsNotifier;
+      final oldOwnsController = _ownsMultiSelectController;
+      selectedItemsNotifier = widget.multiSelectController ??
+          MultiSelectController(oldController.value.toList());
+      _ownsMultiSelectController = widget.multiSelectController == null;
+      selectedItemsNotifier.addListener(_selectedItemsListener);
+      _detachMultiSelectController(
+        controller: oldController,
+        ownsController: oldOwnsController,
+      );
     }
   }
 
   @override
   void dispose() {
-    if (widget.controller == null) {
-      selectedItemNotifier.dispose();
-    } else {
-      selectedItemNotifier.removeListener(_selectedItemListener);
-    }
-
-    if (widget.multiSelectController == null) {
-      selectedItemsNotifier.dispose();
-    } else {
-      selectedItemsNotifier.removeListener(_selectedItemsListener);
-    }
+    _detachSingleSelectController(
+      controller: selectedItemNotifier,
+      ownsController: _ownsSingleSelectController,
+    );
+    _detachMultiSelectController(
+      controller: selectedItemsNotifier,
+      ownsController: _ownsMultiSelectController,
+    );
 
     super.dispose();
   }
@@ -624,9 +675,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
                 final items = widget.items?.map((e) => e.value).toList() ?? [];
                 return _DropdownOverlay<T>(
                   onItemSelect: (T value) {
-                    final isActive = widget.items!
-                        .firstWhere((e) => e.value == value)
-                        .isActive;
+                    final isActive = _findItem(value)?.isActive ?? true;
                     if (isActive) {
                       switch (widget._dropdownType) {
                         case _DropdownType.singleSelect:

@@ -5,7 +5,7 @@ import 'package:animated_custom_dropdown_example/models/job.dart';
 import 'package:flutter/material.dart';
 
 class ControllerValidationDropdown extends StatefulWidget {
-  const ControllerValidationDropdown({Key? key}) : super(key: key);
+  const ControllerValidationDropdown({super.key});
 
   @override
   State<ControllerValidationDropdown> createState() =>

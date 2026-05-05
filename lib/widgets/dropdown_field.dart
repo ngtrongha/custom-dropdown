@@ -90,7 +90,7 @@ class _DropDownFieldState<T> extends State<_DropDownField<T>> {
           TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: widget.enabled ? null : Colors.black.withOpacity(.5),
+            color: widget.enabled ? null : Colors.black.withValues(alpha: .5),
           ),
     );
   }
